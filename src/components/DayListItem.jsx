@@ -7,6 +7,7 @@ export default function DayListItem(props) {
 
   const handleClick = () => setDay(name);
 
+ //format spots 
   const formatSpots = (spots) => {
     
     if (spots === 0){
