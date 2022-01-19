@@ -14,6 +14,8 @@ import Appointment from "components/Appointment/index";
 import Header from "components/Appointment/Header";
 import Empty from "components/Appointment/Empty";
 import Show from "components/Appointment/Show";
+import Confirm from "components/Appointment/Confirm";
+import { actions } from "@storybook/addon-actions/dist/preview";
 
 // Button stories
 storiesOf("Button", module)
@@ -161,5 +163,12 @@ storiesOf("Appointment", module)
       interviewer={interviewer}
       onEdit={action("onEdit")}
       onDelete={action("onDelete")}
+    />
+  ))
+  .add("Confirm", () => (
+    <Confirm
+      message="Delete the apoointment?"
+      onConfirm={action("onConfirm")}
+      onCancel={action("onCancel")}
     />
   ));
