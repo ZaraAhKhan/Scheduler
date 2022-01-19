@@ -5,8 +5,6 @@ import classNames from "classnames";
 export default function DayListItem(props) {
   const { name, spots, setDay } = props;
 
-  const handleClick = () => setDay(name);
-
   //format spots
   const formatSpots = (spots) => {
     if (spots === 0) {
@@ -26,7 +24,7 @@ export default function DayListItem(props) {
   });
 
   return (
-    <li onClick={handleClick} className={dayClass}>
+    <li onClick={setDay} className={dayClass} selected={props.selected}>
       <h2 className="text--regular">{name}</h2>
       <h3 className="text--light">{spotsRemaining}</h3>
     </li>

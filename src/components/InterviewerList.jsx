@@ -9,7 +9,7 @@ export default function InterviewerList(props) {
     <InterviewerListItem
       key={eachInterviewer.id}
       {...eachInterviewer}
-      setInterviewer={setInterviewer}
+      setInterviewer={() => setInterviewer(eachInterviewer.id)}
       selected={eachInterviewer.id === interviewer}
     />
   ));
