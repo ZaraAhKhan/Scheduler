@@ -8,63 +8,32 @@ import Appointment from "components/Appointment";
 
 import axios from "axios";
 
-const appointments = [
-  {
-    id: 1,
-    time: "12pm",
-  },
-  {
-    id: 2,
-    time: "1pm",
-    interview: {
-      student: "Lydia Miller-Jones",
-      interviewer: {
-        id: 3,
-        name: "Sylvia Palmer",
-        avatar: "https://i.imgur.com/LpaY82x.png",
-      },
-    },
-  },
-  {
-    id: 3,
-    time: "2pm",
-  },
-  {
-    id: 4,
-    time: "3pm",
-    interview: {
-      student: "Archie Andrews",
-      interviewer: {
-        id: 4,
-        name: "Cohana Roy",
-        avatar: "https://i.imgur.com/FK8V841.jpg",
-      },
-    },
-  },
-  {
-    id: 5,
-    time: "4pm",
-  },
-];
+import { getAppointmentsForDay } from "helpers/selectors";
 
 export default function Application(props) {
-
   //Combining states
-  const [state,setState] = useState({
+  const [state, setState] = useState({
     day: "Monday",
     days: [],
     appointments: {}
   });
 
-  // Using spread operator to create new object and change the sate of day/days
-  const setDay = day => setState({...state, day});
-  const setDays = days => setState(prev => ({...prev,days}));
+  let dailyAppointments = [];
+  dailyAppointments = getAppointmentsForDay(state,state.day)
+
+  // Using spread operator to create new object and change the state of day/days
+  const setDay = (day) => setState({ ...state, day });
+  // const setDays = days => setState(prev => ({...prev,days}));
 
   useEffect(() => {
-    axios
-    .get(`http://localhost:8001/api/days`)
-    .then((response) => {
-      setDays(response.data);
+    Promise.all([
+      axios.get(`http://localhost:8001/api/days`),
+      axios.get(`http://localhost:8001/api/appointments`)
+    ]).then((all) => {
+      
+      const [first,second] = all;
+      console.log(first.data,second.data);
+      setState(prev => ({...prev, days:first.data, appointments:second.data}))
     });
   }, []);
 
@@ -87,7 +56,7 @@ export default function Application(props) {
         />
       </section>
       <section className="schedule">
-        {appointments.map((appointment) => (
+        {dailyAppointments.map((appointment) => (
           <Appointment key={appointment.id} {...appointment} />
         ))}
         <Appointment key="last" time="5pm" />
