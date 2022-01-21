@@ -15,11 +15,11 @@ export default function Application(props) {
   const [state, setState] = useState({
     day: "Monday",
     days: [],
-    appointments: {}
+    appointments: {},
+    interviewers: {}
   });
-
-  let dailyAppointments = [];
-  dailyAppointments = getAppointmentsForDay(state,state.day)
+ 
+  const dailyAppointments = getAppointmentsForDay(state,state.day)
 
   // Using spread operator to create new object and change the state of day/days
   const setDay = (day) => setState({ ...state, day });
@@ -27,12 +27,13 @@ export default function Application(props) {
 
   useEffect(() => {
     Promise.all([
-      axios.get(`http://localhost:8001/api/days`),
-      axios.get(`http://localhost:8001/api/appointments`)
+      axios.get("http://localhost:8001/api/days"),
+      axios.get("http://localhost:8001/api/appointments"),
+      axios.get("http://localhost:8001/api/interviewers")
     ]).then((all) => {
       
-      const [first,second] = all;
-      console.log(first.data,second.data);
+      const [first,second,third] = all;
+      console.log(third.data);
       setState(prev => ({...prev, days:first.data, appointments:second.data}))
     });
   }, []);
