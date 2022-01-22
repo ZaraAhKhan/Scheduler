@@ -8,7 +8,7 @@ import Appointment from "components/Appointment";
 
 import axios from "axios";
 
-import { getAppointmentsForDay } from "helpers/selectors";
+import { getAppointmentsForDay, getInterview } from "helpers/selectors";
 
 export default function Application(props) {
   //Combining states
@@ -16,10 +16,20 @@ export default function Application(props) {
     day: "Monday",
     days: [],
     appointments: {},
-    interviewers: {}
+    interviewers: {},
   });
- 
-  const dailyAppointments = getAppointmentsForDay(state,state.day)
+
+  const dailyAppointments = getAppointmentsForDay(state, state.day);
+  const schedule = dailyAppointments.map((appointment) => {
+    const interview = getInterview(state, appointment.interview);
+    return (
+      <Appointment
+        key={appointment.id}
+        {...appointment}
+        interview={interview}
+      />
+    );
+  });
 
   // Using spread operator to create new object and change the state of day/days
   const setDay = (day) => setState({ ...state, day });
@@ -29,12 +39,15 @@ export default function Application(props) {
     Promise.all([
       axios.get("http://localhost:8001/api/days"),
       axios.get("http://localhost:8001/api/appointments"),
-      axios.get("http://localhost:8001/api/interviewers")
+      axios.get("http://localhost:8001/api/interviewers"),
     ]).then((all) => {
-      
-      const [first,second,third] = all;
-      console.log(third.data);
-      setState(prev => ({...prev, days:first.data, appointments:second.data}))
+      const [first, second, third] = all;
+      setState((prev) => ({
+        ...prev,
+        days: first.data,
+        appointments: second.data,
+        interviewers:third.data
+      }));
     });
   }, []);
 
@@ -57,9 +70,7 @@ export default function Application(props) {
         />
       </section>
       <section className="schedule">
-        {dailyAppointments.map((appointment) => (
-          <Appointment key={appointment.id} {...appointment} />
-        ))}
+        {schedule}
         <Appointment key="last" time="5pm" />
       </section>
     </main>
