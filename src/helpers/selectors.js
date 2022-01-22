@@ -19,18 +19,18 @@
 }
 
 function getInterviewersForDay(state,day) {
-  let appointmentsForDay;
+  let getInterviewersForDay;
   let result = [];
   for(let dayOfTheWeek of state.days){
     if(dayOfTheWeek.name === day){
-      appointmentsForDay = dayOfTheWeek.appointments;
+      getInterviewersForDay = dayOfTheWeek.interviewers;
     }
   }
-  if(!appointmentsForDay){
+  if(!getInterviewersForDay){
     return [];
   }
-  for(let appointmentObj of Object.values(state.appointments)){
-    if(appointmentsForDay.includes(appointmentObj.id)){
+  for(let appointmentObj of Object.values(state.interviewers)){
+    if(getInterviewersForDay.includes(appointmentObj.id)){
       result.push(appointmentObj);
     }
   }
