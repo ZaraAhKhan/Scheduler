@@ -8,7 +8,7 @@ import Appointment from "components/Appointment";
 
 import axios from "axios";
 
-import { getAppointmentsForDay, getInterview } from "helpers/selectors";
+import { getAppointmentsForDay, getInterview, getInterviewersForDay } from "helpers/selectors";
 
 export default function Application(props) {
   //Combining states
@@ -20,6 +20,10 @@ export default function Application(props) {
   });
 
   const dailyAppointments = getAppointmentsForDay(state, state.day);
+
+  // get the array of interviewers for the day
+  const interviewersForDay = getInterviewersForDay(state,state.day);
+  console.log("Interviewers in Application",interviewersForDay)
   const schedule = dailyAppointments.map((appointment) => {
     const interview = getInterview(state, appointment.interview);
     return (
@@ -27,6 +31,7 @@ export default function Application(props) {
         key={appointment.id}
         {...appointment}
         interview={interview}
+        interviewers={interviewersForDay}
       />
     );
   });
@@ -71,7 +76,6 @@ export default function Application(props) {
       </section>
       <section className="schedule">
         {schedule}
-        <Appointment key="last" time="5pm" />
       </section>
     </main>
   );
