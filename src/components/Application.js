@@ -19,11 +19,16 @@ export default function Application(props) {
     interviewers: {},
   });
 
+  //get array of appointments for the day
   const dailyAppointments = getAppointmentsForDay(state, state.day);
 
   // get the array of interviewers for the day
   const interviewersForDay = getInterviewersForDay(state,state.day);
-  console.log("Interviewers in Application",interviewersForDay)
+
+  function bookInterview(id, interview) {
+    console.log(id, interview);
+  }
+  
   const schedule = dailyAppointments.map((appointment) => {
     const interview = getInterview(state, appointment.interview);
     return (
@@ -32,13 +37,16 @@ export default function Application(props) {
         {...appointment}
         interview={interview}
         interviewers={interviewersForDay}
+        bookInterview={bookInterview}
       />
     );
   });
 
+  
+
   // Using spread operator to create new object and change the state of day/days
   const setDay = (day) => setState({ ...state, day });
-  // const setDays = days => setState(prev => ({...prev,days}));
+  
 
   useEffect(() => {
     Promise.all([
