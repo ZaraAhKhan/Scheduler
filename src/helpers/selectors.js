@@ -28,11 +28,11 @@ function getInterview(state, interview) {
   if (!interview) {
     return null;
   }
-  for (let interviewer of Object.values(state.interviewers)) {
-    if (interviewer.id === interview.interviewer) {
-      interview.interviewer = interviewer;
-    }
-  }
+
+  let interviewArray = Object.values(state.interviewers).filter(
+    (interviewer) => interviewer.id === interview.interviewer
+  );
+  interview.interviewer = interviewArray[0];
   return interview;
 }
 
