@@ -19,40 +19,11 @@ export default function Application(props) {
     interviewers: {},
   });
 
-  //get array of appointments for the day
-  const dailyAppointments = getAppointmentsForDay(state, state.day);
-
-  // get the array of interviewers for the day
-  const interviewersForDay = getInterviewersForDay(state,state.day);
-
-  function bookInterview(id, interview) {
-    console.log(id, interview);
-  }
-  
-  const schedule = dailyAppointments.map((appointment) => {
-    const interview = getInterview(state, appointment.interview);
-    return (
-      <Appointment
-        key={appointment.id}
-        {...appointment}
-        interview={interview}
-        interviewers={interviewersForDay}
-        bookInterview={bookInterview}
-      />
-    );
-  });
-
-  
-
-  // Using spread operator to create new object and change the state of day/days
-  const setDay = (day) => setState({ ...state, day });
-  
-
   useEffect(() => {
     Promise.all([
-      axios.get("http://localhost:8001/api/days"),
-      axios.get("http://localhost:8001/api/appointments"),
-      axios.get("http://localhost:8001/api/interviewers"),
+      axios.get("/api/days"),
+      axios.get("/api/appointments"),
+      axios.get("/api/interviewers"),
     ]).then((all) => {
       const [first, second, third] = all;
       setState((prev) => ({
@@ -63,6 +34,56 @@ export default function Application(props) {
       }));
     });
   }, []);
+
+  //get array of appointments for the day
+  const dailyAppointments = getAppointmentsForDay(state, state.day);
+  console.log("Daily app" , dailyAppointments);
+
+  // get the array of interviewers for the day
+  const interviewersForDay = getInterviewersForDay(state,state.day);
+
+  function bookInterview(id, interview) {
+    console.log(id, interview);
+    const appointment = {
+      ...state.appointments[id],
+      interview: {...interview} 
+    };
+    // console.log("Interview in app",appointment)
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment
+    };
+    // console.log("appointments in app",appointments)
+    setState({  
+      ...state,
+     appointments 
+    });
+    
+  }
+  console.log(state);
+  const schedule = dailyAppointments.map((appointment) => {
+    const interview = getInterview(state, appointment.interview);
+    console.log("Interview",interview);
+    return (
+      <Appointment
+        key={appointment.id}
+        id={appointment.id}
+        time={appointment.time}
+        interview={interview}
+        interviewers={interviewersForDay}
+        bookInterview={bookInterview}
+      />
+      
+    );
+  });
+
+  
+
+  // Using spread operator to create new object and change the state of day/days
+  const setDay = (day) => setState({ ...state, day });
+  
+
+  
 
   return (
     <main className="layout">
