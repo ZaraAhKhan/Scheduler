@@ -9,6 +9,7 @@ import Appointment from "components/Appointment";
 import axios from "axios";
 
 import { getAppointmentsForDay, getInterview, getInterviewersForDay } from "helpers/selectors";
+import { tsNumberKeyword } from "@babel/types";
 
 export default function Application(props) {
   //Combining states
@@ -24,6 +25,7 @@ export default function Application(props) {
       axios.get("/api/days"),
       axios.get("/api/appointments"),
       axios.get("/api/interviewers"),
+      axios.get("/api/debug/reset")
     ]).then((all) => {
       const [first, second, third] = all;
       setState((prev) => ({
@@ -48,17 +50,24 @@ export default function Application(props) {
       ...state.appointments[id],
       interview: {...interview} 
     };
-    // console.log("Interview in app",appointment)
+    
     const appointments = {
       ...state.appointments,
       [id]: appointment
     };
-    // console.log("appointments in app",appointments)
+    
     setState({  
       ...state,
      appointments 
     });
     
+    axios.put(`/api/appointments/${id}`,appointment)
+    .then((res) => {
+      console.log(res);
+      setState( prev => ({...prev, appointments }));
+      return true;
+    })
+    .catch(err => console.log(err.message));
   }
   console.log(state);
   const schedule = dailyAppointments.map((appointment) => {
@@ -105,6 +114,7 @@ export default function Application(props) {
       </section>
       <section className="schedule">
         {schedule}
+        <Appointment key="last" time="5pm" />
       </section>
     </main>
   );

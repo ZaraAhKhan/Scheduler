@@ -20,8 +20,10 @@ export default function Appointment(props) {
       interviewer
     };
     console.log("calling book Interview",interview);
-    props.bookInterview(props.id,interview);
-    transition(SHOW);
+    if(props.bookInterview(props.id,interview) === true){
+      transition(SHOW);
+    }
+    
   }
 
   return (
