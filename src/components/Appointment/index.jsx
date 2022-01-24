@@ -31,14 +31,14 @@ export default function Appointment(props) {
     }
   }
 
-  function onDelete (id) {
+  function onDelete () {
     transition(CONFIRM);
   }
 
-  function onConfirm (id) {
+  function onConfirm () {
   transition(DELETING);
-  props.cancelInterview(id);
-  if(props.cancelInterview(id)){
+  props.cancelInterview(props.id);
+  if(props.cancelInterview(props.id)){
     setTimeout(() => transition(EMPTY),1500);
   }
   }
@@ -59,7 +59,7 @@ export default function Appointment(props) {
       )}
       {mode === SAVING && <Status message="Saving" />}
       {mode === DELETING && <Status message="Deleting" />}
-      {mode === CONFIRM && <Confirm message="Are you sure you would like to delete?" onConfirm={onConfirm} onCancel={onCancel} id={props.id}/>}
+      {mode === CONFIRM && <Confirm message="Are you sure you would like to delete?" onConfirm={onConfirm} onCancel={onCancel} />}
     </article>
   );
 }
