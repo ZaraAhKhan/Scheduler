@@ -69,12 +69,12 @@ export default function Application(props) {
       .then((res) => {
         if (process.env.TEST_ERROR) {
           setTimeout(() => res.status(500).json({}), 1000);
-          
+          return;
         }
         setState((prev) => ({ ...prev, appointments }));
         return res;
       })
-      .catch((err) =>  false);
+      
   }
 
   const cancelInterview = function (id) {
@@ -83,6 +83,7 @@ export default function Application(props) {
       .then((res) => {
         if (process.env.TEST_ERROR) {
           setTimeout(() => res.status(500).json({}), 1000);
+          return;
         }
         const toBeDeleted = dailyAppointments.find(
           (appointment) => (appointment.id = id)
@@ -90,7 +91,6 @@ export default function Application(props) {
         toBeDeleted.interview = null;
         return res;
       })
-      .catch((err) => false);
   };
   const schedule = dailyAppointments.map((appointment) => {
     const interview = getInterview(state, appointment.interview);
