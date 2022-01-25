@@ -8,8 +8,11 @@ import Appointment from "components/Appointment";
 
 import axios from "axios";
 
-import { getAppointmentsForDay, getInterview, getInterviewersForDay } from "helpers/selectors";
-
+import {
+  getAppointmentsForDay,
+  getInterview,
+  getInterviewersForDay,
+} from "helpers/selectors";
 
 export default function Application(props) {
   //Combining states
@@ -32,52 +35,62 @@ export default function Application(props) {
         ...prev,
         days: first.data,
         appointments: second.data,
-        interviewers:third.data
+        interviewers: third.data,
       }));
     });
   }, []);
 
   //get array of appointments for the day
   const dailyAppointments = getAppointmentsForDay(state, state.day);
-  console.log("Daily app" , dailyAppointments);
+  console.log("Daily app", dailyAppointments);
 
   // get the array of interviewers for the day
-  const interviewersForDay = getInterviewersForDay(state,state.day);
+  const interviewersForDay = getInterviewersForDay(state, state.day);
 
   function bookInterview(id, interview) {
     console.log(id, interview);
     const appointment = {
       ...state.appointments[id],
-      interview: {...interview} 
+      interview: { ...interview },
     };
-    
+
     const appointments = {
       ...state.appointments,
-      [id]: appointment
+      [id]: appointment,
     };
-    
-    setState({  
+
+    setState({
       ...state,
-     appointments 
+      appointments,
     });
-    
-    return axios.put(`/api/appointments/${id}`,appointment)
-    .then((res) => {
-      console.log(res);
-      setState( prev => ({...prev, appointments }));
-    })
-    .catch(err => console.log(err.message));
+
+    return axios
+      .put(`/api/appointments/${id}`, appointment)
+      .then((res) => {
+        // if (process.env.TEST_ERROR) {
+        //   setTimeout(() => res.status(500).json({}), 1000);
+        //   return false;
+        // }
+        console.log(res);
+        setState((prev) => ({ ...prev, appointments }));
+      })
+      .catch((err) => console.log(err.message));
   }
-  
+
   const cancelInterview = function (id) {
-    console.log(id);
-    const toBeDeleted = dailyAppointments.find(appointment => appointment.id = id);
-    toBeDeleted.interview = null;
-    return true;
-  }
+    return axios
+      .delete(`/api/appointments/${id}`, dailyAppointments)
+      .then((res) => {
+        const toBeDeleted = dailyAppointments.find(
+          (appointment) => (appointment.id = id)
+        );
+        toBeDeleted.interview = null;
+        return res;
+      });
+  };
   const schedule = dailyAppointments.map((appointment) => {
     const interview = getInterview(state, appointment.interview);
-    console.log("Interview",interview);
+    console.log("Interview", interview);
     return (
       <Appointment
         key={appointment.id}
@@ -88,17 +101,11 @@ export default function Application(props) {
         bookInterview={bookInterview}
         cancelInterview={cancelInterview}
       />
-      
     );
   });
 
-  
-
   // Using spread operator to create new object and change the state of day/days
   const setDay = (day) => setState({ ...state, day });
-  
-
-  
 
   return (
     <main className="layout">
