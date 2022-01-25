@@ -71,8 +71,9 @@ export default function Application(props) {
         //   setTimeout(() => res.status(500).json({}), 1000);
         //   return false;
         // }
-        console.log(res);
+        
         setState((prev) => ({ ...prev, appointments }));
+        return res;
       })
       .catch((err) => console.log(err.message));
   }

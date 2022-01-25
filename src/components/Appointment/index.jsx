@@ -28,10 +28,9 @@ export default function Appointment(props) {
       interviewer,
     };
     console.log("calling book Interview", interview);
-    props.bookInterview(props.id, interview);
-    if (props.bookInterview(props.id, interview)) {
-      setTimeout(() => transition(SHOW), 1000);
-    } 
+    props
+      .bookInterview(props.id, interview)
+      .then(() => setTimeout(() => transition(SHOW), 1000));
   }
 
   function onDelete() {
@@ -40,10 +39,8 @@ export default function Appointment(props) {
 
   function onConfirm() {
     transition(DELETING);
-    props.cancelInterview(props.id);
-    if (props.cancelInterview(props.id)) {
-      setTimeout(() => transition(EMPTY), 1000);
-    }
+    props.cancelInterview(props.id)
+    .then(() => setTimeout(() => transition(EMPTY), 1000));
   }
 
   function onCancel() {
