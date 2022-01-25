@@ -1,4 +1,4 @@
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 
 import axios from "axios";
 
@@ -6,7 +6,7 @@ import { getAppointmentsForDay } from "helpers/selectors";
 
 export default function useApplicationData() {
   //Combining states
-  
+
   const [state, setState] = useState({
     day: "Monday",
     days: [],
@@ -36,7 +36,7 @@ export default function useApplicationData() {
 
   //bookInterview makes HTTP request and updates local state
   function bookInterview(id, interview) {
-    console.log(id, interview);
+    console.log("id in book Interview", id, interview);
     const appointment = {
       ...state.appointments[id],
       interview: { ...interview },
@@ -46,41 +46,50 @@ export default function useApplicationData() {
       ...state.appointments,
       [id]: appointment,
     };
-
-    setState({
-      ...state,
-      appointments,
-    });
-
-    return axios
-      .put(`/api/appointments/${id}`, appointment)
-      .then((res) => {
-        if (process.env.TEST_ERROR) {
-          setTimeout(() => res.status(500).json({}), 1000);
-          return;
-        }
-        setState((prev) => ({ ...prev, appointments }));
-        return res;
-      })
+    // console.log(appointments);
+    // console.log("before setState", state);
+    // console.log("state after setState in bookInterview", state);
+    return axios.put(`/api/appointments/${id}`, appointment)
+    .then((res) => {
+      if (process.env.TEST_ERROR) {
+        setTimeout(() => res.status(500).json({}), 1000);
+        return;
+      }
+      setState({...state,appointments});
       
+      updateSpots(state, appointments, id);
+    });
   }
-
+  console.log("State outside", state);
   const dailyAppointments = getAppointmentsForDay(state, state.day);
 
   const cancelInterview = function (id) {
-    return axios
-      .delete(`/api/appointments/${id}`, dailyAppointments)
-      .then((res) => {
-        if (process.env.TEST_ERROR) {
-          setTimeout(() => res.status(500).json({}), 1000);
-          return;
-        }
-        const toBeDeleted = dailyAppointments.find(
-          (appointment) => (appointment.id = id)
-        );
-        toBeDeleted.interview = null;
-        return res;
-      })
+    const appointment = {
+      ...state.appointments[id],
+      interview: null
+    };
+
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment,
+    };
+    
+    return axios.delete(`/api/appointments/${id}`)
+    .then((res) => {
+      if (process.env.TEST_ERROR) {
+        setTimeout(() => res.status(500).json({}), 1000);
+        return;
+      }
+      setState({...state,appointments});
+      
+      updateSpots(state, appointments, id);
+    });
   };
-  return ({state,setDay,bookInterview,cancelInterview,useEffect});
+
+  const updateSpots = function (state, appointments, id) {
+      console.log(appointments);
+
+    // return days;
+  };
+  return { state, setDay, bookInterview, cancelInterview, useEffect };
 }
