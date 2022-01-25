@@ -32,6 +32,13 @@ export default function useApplicationData() {
     });
   }, []);
 
+  function updateSpots(id){
+    axios.get('/api/days')
+    .then((response) => {
+      setState((prev) => ({...prev, days:response.data}))
+    })
+  }
+
   //bookInterview makes HTTP request and updates local state
   function bookInterview(id, interview) {
     console.log("id in book Interview", id, interview);
@@ -54,7 +61,7 @@ export default function useApplicationData() {
       }
       setState({ ...state, appointments });
 
-      updateSpots(state, appointments, id);
+      updateSpots(id);
     });
   }
   console.log("State outside", state);
@@ -77,38 +84,38 @@ export default function useApplicationData() {
       }
       setState({ ...state, appointments });
 
-      updateSpots(state, appointments, id);
+      updateSpots(id);
     });
   };
 
-  const updateSpots = function (state, appointments, id) {
-    if (appointments[id].interview) {
-      const newState = { ...state };
-      const dayObj = newState.days.find((day) => day.appointments.includes(id));
-      dayObj.spots = dayObj.spots - 1;
-      const dayObjId = dayObj.id;
-      newState.days.map((day) => {
-        if (day.id === dayObjId) {
-          day = dayObj;
-        }
-      });
-      console.log("Post updateSpots",newState.days);
-      return newState.days;
-    } else if(!appointments[id].interview){
-      const newState = { ...state };
-      const dayObj = newState.days.find((day) => day.appointments.includes(id));
-      dayObj.spots = dayObj.spots + 1;
-      const dayObjId = dayObj.id;
-      newState.days.map((day) => {
-        if (day.id === dayObjId) {
-          day = dayObj;
-        }
-      });
-      console.log("Post updateSpots",newState.days);
-      return newState.days;
-    }
+  // const updateSpots = function (state, appointments, id) {
+  //   if (appointments[id].interview) {
+  //     const newState = { ...state };
+  //     const dayObj = newState.days.find((day) => day.appointments.includes(id));
+  //     dayObj.spots = dayObj.spots - 1;
+  //     const dayObjId = dayObj.id;
+  //     newState.days.map((day) => {
+  //       if (day.id === dayObjId) {
+  //         day = dayObj;
+  //       }
+  //     });
+  //     console.log("Post updateSpots",newState.days);
+  //     return newState.days;
+  //   } else if(!appointments[id].interview){
+  //     const newState = { ...state };
+  //     const dayObj = newState.days.find((day) => day.appointments.includes(id));
+  //     dayObj.spots = dayObj.spots + 1;
+  //     const dayObjId = dayObj.id;
+  //     newState.days.map((day) => {
+  //       if (day.id === dayObjId) {
+  //         day = dayObj;
+  //       }
+  //     });
+  //     console.log("Post updateSpots",newState.days);
+  //     return newState.days;
+  //   }
     
     
-  };
+  // };
   return { state, setDay, bookInterview, cancelInterview, useEffect, updateSpots };
 }
