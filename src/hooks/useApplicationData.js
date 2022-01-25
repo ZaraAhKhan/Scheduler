@@ -117,5 +117,5 @@ export default function useApplicationData() {
     
     
   // };
-  return { state, setDay, bookInterview, cancelInterview, useEffect, updateSpots };
+  return { state, setDay, bookInterview, cancelInterview, useEffect};
 }
