@@ -67,27 +67,30 @@ export default function Application(props) {
     return axios
       .put(`/api/appointments/${id}`, appointment)
       .then((res) => {
-        // if (process.env.TEST_ERROR) {
-        //   setTimeout(() => res.status(500).json({}), 1000);
-        //   return false;
-        // }
-        
+        if (process.env.TEST_ERROR) {
+          setTimeout(() => res.status(500).json({}), 1000);
+          
+        }
         setState((prev) => ({ ...prev, appointments }));
         return res;
       })
-      .catch((err) => console.log(err.message));
+      .catch((err) =>  false);
   }
 
   const cancelInterview = function (id) {
     return axios
       .delete(`/api/appointments/${id}`, dailyAppointments)
       .then((res) => {
+        if (process.env.TEST_ERROR) {
+          setTimeout(() => res.status(500).json({}), 1000);
+        }
         const toBeDeleted = dailyAppointments.find(
           (appointment) => (appointment.id = id)
         );
         toBeDeleted.interview = null;
         return res;
-      });
+      })
+      .catch((err) => false);
   };
   const schedule = dailyAppointments.map((appointment) => {
     const interview = getInterview(state, appointment.interview);
