@@ -65,9 +65,8 @@ export default function Appointment(props) {
       {mode === EMPTY && <Empty onAdd={() => transition(CREATE)} />}
       {mode === SHOW && (
         <Show
-          // student={interview.student}
-          student={interview.student}
-          interviewer={interview.interviewer} 
+          student={interview.student || {interview : {student:''}}}
+          interviewer={interview.interviewer|| { interview : {interviewer: {name:''}}}} 
           id={props.id}
           onDelete={onDelete}
           onEdit={onEdit}
@@ -103,4 +102,3 @@ export default function Appointment(props) {
     </article>
   );
 }
-// || { interview : {interviewer: {name:''}}}}
