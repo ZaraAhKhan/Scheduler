@@ -32,7 +32,7 @@ export default function useApplicationData() {
     });
   }, []);
 
-  function updateSpots(id){
+  function updateSpots(){
     axios.get('/api/days')
     .then((response) => {
       setState((prev) => ({...prev, days:response.data}))
@@ -61,7 +61,7 @@ export default function useApplicationData() {
       }
       setState({ ...state, appointments });
 
-      updateSpots(id);
+      updateSpots();
     });
   }
   console.log("State outside", state);
@@ -84,7 +84,7 @@ export default function useApplicationData() {
       }
       setState({ ...state, appointments });
 
-      updateSpots(id);
+      updateSpots();
     });
   };
 
