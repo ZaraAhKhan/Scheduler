@@ -10,6 +10,9 @@ Technical specifications
  * Jest 
  * Testing Library
 
+## Application 
+![Appointment-creation](https://github.com/ZaraAhKhan/Scheduler/blob/master/docs/appoinment-creation.gif?raw=true)
+
 ## Setup
 
 Install dependencies with `npm install`.
