@@ -27,6 +27,10 @@ Technical specifications
 
 Install dependencies with `npm install`.
 
+## The Scheduler-api
+
+The application makes axios requests to the scheduler api. To run the api server follow the instructions in the scheduler-api https://github.com/lighthouse-labs/scheduler-api. 
+
 ## Running Webpack Development Server
 
 ```sh

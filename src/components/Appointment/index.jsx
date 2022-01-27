@@ -36,7 +36,7 @@ export default function Appointment(props) {
       .then((res) => {
         transition(SHOW);
       })
-      .catch(() => transition(ERROR_SAVE, true));
+      .catch(() => transition(ERROR_SAVE));
   }
 
   // on clicking delete appointment 
