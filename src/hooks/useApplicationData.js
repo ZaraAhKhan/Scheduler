@@ -15,12 +15,13 @@ export default function useApplicationData() {
   // Using spread operator to create new object and change the state of day/days
   const setDay = (day) => setState({ ...state, day });
 
+  // make HTTP requests for data and update the state
   useEffect(() => {
     Promise.all([
       axios.get("/api/days"),
       axios.get("/api/appointments"),
       axios.get("/api/interviewers"),
-      // axios.get("/api/debug/reset")
+     
     ]).then((all) => {
       const [first, second, third] = all;
       setState((prev) => ({
@@ -32,25 +33,28 @@ export default function useApplicationData() {
     });
   }, []);
 
-  function updateSpots(requestType, id) {
-    const days = state.days.map((day) => {
-      if (day.name === state.day) {
-        if (
-          requestType === "bookAppointment" &&
-          !state.appointments[id].interview
-        ) {
-          return { ...day, spots: day.spots - 1 };
-        } else if (!requestType) {
-          return { ...day, spots: day.spots + 1 };
-        } else {
-          return { ...day };
-        }
-      } else {
-        return { ...day };
+  // helper function for updateSpots
+  const getSpotsForDay = function(dayObj,appointments) {
+    let spots = 0;
+    for (const id of dayObj.appointments) {
+      const appointment = appointments[id];
+      if (!appointment.interview) {
+        spots ++;
       }
-    });
-    return days;
-  }
+    }
+    return spots;
+  };
+
+  // updates the number of spots when booking or cancelling appointments
+  const updateSpots = function(state,appointments,id) {
+    const dayObj = state.days.find(day => day.name === state.day);
+    const spots = getSpotsForDay(dayObj,appointments);
+    
+    const newDays = state.days.map(day => day.name === state.day ? {...dayObj, spots} : day);
+    return newDays;
+  };
+
+  
 
   //bookInterview makes HTTP request and updates local state
   function bookInterview(id, interview) {
@@ -74,12 +78,13 @@ export default function useApplicationData() {
       setState({
         ...state,
         appointments,
-        days: updateSpots("bookAppointment", id),
+        days: updateSpots(state,appointments,id),
       });
     });
   }
   console.log("State outside", state);
 
+  //cancels interview by making HTTP request and updates state
   const cancelInterview = function (id) {
     const appointment = {
       ...state.appointments[id],
@@ -96,7 +101,7 @@ export default function useApplicationData() {
         setTimeout(() => res.status(500).json({}), 1000);
         return;
       }
-      setState({ ...state, appointments, days: updateSpots() });
+      setState({ ...state, appointments, days: updateSpots(state,appointments,id) });
     });
   };
 
