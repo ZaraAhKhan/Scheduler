@@ -6,23 +6,25 @@ export default function Form(props) {
   const [student, setStudent] = useState(props.student || "");
   const [interviewer, setInterviewer] = useState(props.interviewer || null);
   const [error, setError] = useState("");
-  console.log("Interviewer in Form",interviewer);
+  
   const reset = () => {
     setStudent("");
     setInterviewer(null);
     setError("");
-  };
+  };  
+
+  //on cancelling booking an appointment
 
   const cancel = () => {
     reset();
     props.onCancel();
   };
 
+  //check to make sure student name is not blank
   const validate = () => { 
     if(!student) {
       return setError("Student name cannot be blank");
     }
-    
     setError("");
     props.onSave(student, interviewer)
   };

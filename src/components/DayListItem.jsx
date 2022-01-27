@@ -5,7 +5,7 @@ import classNames from "classnames";
 export default function DayListItem(props) {
   const { name, spots, setDay } = props;
 
-  //format spots
+  //format spots based on number of spots remaining
   const formatSpots = (spots) => {
     if (spots === 0) {
       return "no spots remaining";

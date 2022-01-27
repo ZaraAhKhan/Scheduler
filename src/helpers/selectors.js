@@ -29,11 +29,7 @@ function getInterview(state, interview) {
     interviewer: state.interviewers[interview.interviewer],
   };
   return interviewObj;
-  // let interviewArray = Object.values(state.interviewers).filter(
-  //   (interviewer) => interviewer.id === interview.interviewer
-  // );
-  // interview.interviewer = interviewArray[0];
-  // return interview;
+  
 }
 
 module.exports = { getAppointmentsForDay, getInterview, getInterviewersForDay };

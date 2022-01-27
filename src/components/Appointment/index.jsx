@@ -20,8 +20,10 @@ export default function Appointment(props) {
   const EDIT = "EDIT";
   const ERROR_SAVE = "ERROR_SAVE";
   const ERROR_DELETE = "ERROR_DELETE";
+
   const { mode, transition, back } = useVisualMode(interview ? SHOW : EMPTY);
 
+  //saves the appointment
   function save(name, interviewer) {
     const interview = {
       student: name,
@@ -30,31 +32,35 @@ export default function Appointment(props) {
     transition(SAVING);
 
     props
-      .bookInterview(props.id, interview)
+      .bookInterview(props.id, interview) // calling bookInterview in application.js
       .then((res) => {
-        setTimeout(() => transition(SHOW), 1000);
+        transition(SHOW);
       })
       .catch(() => transition(ERROR_SAVE, true));
   }
 
+  // on clicking delete appointment 
   function onDelete() {
     transition(CONFIRM);
   }
 
+  //on confirming the deletion of appointment
   function onConfirm() {
     transition(DELETING, true);
     props
       .cancelInterview(props.id)
       .then((res) => {
-        setTimeout(() => transition(EMPTY), 1000);
+       transition(EMPTY);
       })
       .catch(() => transition(ERROR_DELETE, true));
   }
 
+  // on cancelling the deletion of appointment
   function onCancel() {
     transition(SHOW);
   }
 
+  // on clicking edit appointment button
   function onEdit() {
     transition(EDIT);
   }
