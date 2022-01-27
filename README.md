@@ -11,7 +11,17 @@ Technical specifications
  * Testing Library
 
 ## Application 
+### Creating an appointment
 ![Appointment-creation](https://github.com/ZaraAhKhan/Scheduler/blob/master/docs/appoinment-creation.gif?raw=true)
+
+### Error messages
+![Appointment-creation](https://github.com/ZaraAhKhan/Scheduler/blob/master/docs/appoinment-error-message.gif?raw=true)
+
+### Deleteing an appointment
+![Appointment-deletion](https://github.com/ZaraAhKhan/Scheduler/blob/master/docs/appoinment-deletion.gif?raw=true)
+
+### Editing an appointment
+![Appointment-creation](https://github.com/ZaraAhKhan/Scheduler/blob/master/docs/appoinment-editing.gif?raw=true)
 
 ## Setup
 
